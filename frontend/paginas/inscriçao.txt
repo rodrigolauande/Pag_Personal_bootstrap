@@ -1,0 +1,233 @@
+<div class="jumbotron p-4 my-1">
+    <h1 class="display-4">Inscreva-se</h1>
+    <p class="lead m-1">Deixe seu contato,</p>
+    <p class="lead m-1">Breve eu entrarei em contato.</p>
+</div>
+  <nav>
+    <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item">
+            <a href="#/paginas/bemVindo.html">Início</a>
+        </li>
+        <li class="breadcrumb-item active">Inscrição</li>
+      </ol>
+  </nav>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Formulário</h5>
+    </div>
+<div class="card-body">
+    <form class="container-fluid myForm">
+        <div class="form-row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control myNome"
+                    name="nome"
+                    value=this.state.users.name
+                    onChange="{e => updateField(e)}"
+                    placeholder="informe o nome completo">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@</span>
+                                </div>
+                                <input type="text" class="form-control myEmail"
+                                name="email"
+                                value={this.state.users.email}
+                                onChange="{e => updateField(e)}"
+                                placeholder="Informe o Email">
+                            </div>
+                            <small class="form-text text-warning">
+                            Enviaremos um email para confirmar o cadastro
+                            </small>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6"> 
+                    <div class="form-group">
+                        <label for="telefone">WhatsApp</label> 
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Cel</span>
+                                </div>
+                                <input type="text" class="form-control myTelefone"
+                                name="telefone"
+                                value="{this.state.users.telefone}"
+                                onChange="{e => updateField(e)}"
+                                placeholder="Informe o número">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mb-0">
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-primary mr-2" type="submit" onClick="{submit => save(submit)}">Salvar</button> 
+                <button class="btn btn-secondary" type="submit" onClick="{submit => clear(submit)}">Cancelar</button> 
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+import axios from 'axios'
+
+const baseUrl = "http://localhost:8081/users"
+    const initialState = { // estado inicial do formulario
+        user: { name: '', email: '', telefone: '' },
+        list: []
+    }
+
+    state = { ...initialState }
+
+function componentWillMount() { //função chamada quando um componente for exibido na tela, faço uma chamada no meu backend dos id
+                axios(baseUrl).then(resp => { //axios traz todos os usuarios
+                    this.setState({ list: resp.data }) // aquilo que tenho como resposta é armazenado na minha lista
+                })
+            }
+
+function clear() { //função clear para limpar o formulario
+                this.setState ({ user: initialState.user }) //quero limpar apenas o usuario
+            }
+
+function save () {
+    const user = this.state.user //não altero o usuario, uso atraves do state
+        const method = user.id ? 'put' : 'post' //se o id estiver acetado, user.id for verdadeiro eu altero ou se não for verdadeiro eu posto
+        const url = user.id ? `${baseUrl}/${user.id}` : baseUrl //ser for um put alem de eu passar a url padrão, passo o id do usuario, no post não preciso passar a url ou id
+        axios[method](url, user)
+            .then(resp => {
+                const list = this.updateList(resp.data) //resp.data são dados retornados do json
+                this.setState({ user: initialState.user, list }) //chamos o setState para alterar o user (limpa) e atualizar a lista
+            })
+    }
+
+function getUpdateList(user) {
+                const list = this.state.list.filter(u => u.id !== user.id) //gera uma nova lista de usuarios com id diferente
+                list.unshift(user)//unshift colocar um determinado elemento no inicio do array
+                return list
+            }
+
+function updateField(event) { // atualiza os campos (nome e email)
+                const user = { ...this.state.user } //clono o usuario com operador spreed e depois altere, setando no final, react faz isso, evolui o estado do objeto
+                user[event.target.name] = event.target.value // (nome e atributo) (valor dentro do nome(imput))
+                this.setState({ user })
+            }
+
+function load(user) { //clica para carregar o usuario
+        this.setState({ user })
+    }
+
+function remove(user) {
+        axios.delete(`${baseUrl}/${user.id}`).then(resp => {
+            const list = this.getUpdateList(user, false)
+            this.setState({ list }) //encontrando o usuario
+        })
+    }
+</script>
+
+
+
+<div class="jumbotron p-4 my-1">
+    <h1 class="display-4">Inscreva-se</h1>
+    <p class="lead m-1">Deixe seu contato,</p>
+    <p class="lead m-1">Breve eu entrarei em contato.</p>
+</div>
+  <nav>
+    <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item">
+            <a href="#/paginas/bemVindo.html">Início</a>
+        </li>
+        <li class="breadcrumb-item active">Inscrição</li>
+      </ol>
+  </nav>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Formulário</h5>
+    </div>
+<div class="card-body">
+    <form class="container-fluid myForm">
+        <div class="form-row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control myNome"
+                    name="nome" placeholder="informe o nome completo">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@</span>
+                                </div>
+                                <input type="text" class="form-control myEmail"
+                                name="email" placeholder="Informe o Email">
+                            </div>
+                            <small class="form-text text-warning">
+                            Enviaremos um email para confirmar o cadastro
+                            </small>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6"> 
+                    <div class="form-group">
+                        <label for="telefone">WhatsApp</label> 
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Cel</span>
+                                </div>
+                                <input type="text" class="form-control myTelefone"
+                                name="telefone" placeholder="Informe o número">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mb-0">
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-primary mr-2" type="submit">salvar</button> 
+                <button class="btn btn-secondary" type="reset">Cancelar</button> 
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function envioDoForm() {
+        const form = document.querySelector('.myForm');
+        const inputUsername = document.querySelector('.myNome');
+        const inputEmail = document.querySelector('.myEmail');
+        const inputTelefone = document.querySelector('.myTelefone');
+
+    form.addEventListener('submit', async (event) => {
+	    try {
+	        event.preventDefault();
+	        
+        await axios.post('http://localhost:3000/users', {
+            nome: inputUsername.nome,
+            email: inputEmail.email,
+            telefone: inputTelefone.telefone,
+        });
+
+        alert('Formulario enviado com sucesso');
+        form.reset()
+	    console.log(data);	
+	    } catch (err) {
+	    console.log(err);
+	    }
+    })
+}
+envioDoForm()
+</script>
+

@@ -1,0 +1,19 @@
+const express = require('express');
+const expressHandlebars = require('expressHandlebars');
+const bodyParser = require('bodyParser');
+
+const app = express();
+
+app.use(bodyParser.urlecoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.engine('handlebars', expressHandlebars({defaultLayout: 'principal'}));
+app.set('view engine', 'handlebars');
+
+app.get('/' function (req, re) {
+    res.render('inscrição');
+});
+
+app.listen(8081, () => {
+    console.log('Backend execultando...')
+})
